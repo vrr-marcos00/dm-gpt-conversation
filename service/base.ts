@@ -1,6 +1,6 @@
 import { API_PREFIX } from '@/config'
-import Toast from '@/app/components/base/toast'
-import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
+import Toast from '../app/chat/components/base/toast'
+import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '../app/chat/components/chat/type'
 import type { VisionFile } from '@/types/app'
 
 const TIME_OUT = 100000

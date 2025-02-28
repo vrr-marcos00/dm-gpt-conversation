@@ -9,6 +9,7 @@ type ConversationInfoType = Omit<ConversationItem, 'inputs' | 'id'>
 function useConversation() {
   const [conversationList, setConversationList] = useState<ConversationItem[]>([])
   const [currConversationId, doSetCurrConversationId, getCurrConversationId] = useGetState<string>('-1')
+
   // when set conversation id, we do not have set appId
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
@@ -27,6 +28,7 @@ function useConversation() {
   }
 
   const isNewConversation = currConversationId === '-1'
+
   // input can be updated by user
   const [newConversationInputs, setNewConversationInputs] = useState<Record<string, any> | null>(null)
   const resetNewConversationInputs = () => {
@@ -38,6 +40,7 @@ function useConversation() {
       })
     }))
   }
+
   const [existConversationInputs, setExistConversationInputs] = useState<Record<string, any> | null>(null)
   const currInputs = isNewConversation ? newConversationInputs : existConversationInputs
   const setCurrInputs = isNewConversation ? setNewConversationInputs : setExistConversationInputs

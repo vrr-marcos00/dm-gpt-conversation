@@ -3,23 +3,22 @@ import { getLocaleOnServer } from '@/i18n/server'
 import './styles/globals.css'
 import './styles/markdown.scss'
 
-const LocaleLayout = ({
-  children,
-}: {
-  children: React.ReactNode
-}) => {
-  const locale = getLocaleOnServer()
+import { SidebarProvider } from "@/components/ui/sidebar"
+
+import { AppSidebar } from '../components/sidebar-main'
+
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang={locale ?? 'en'} className="h-full">
+    <html lang="pt-BR" className="h-full">
       <body className="h-full">
-        <div className="overflow-x-auto">
-          <div className="w-screen h-screen min-w-[300px]">
+        <SidebarProvider>
+          <AppSidebar />
+          <main style={{ width: '100%', height: '100%' }}>
             {children}
-          </div>
-        </div>
+          </main>
+        </SidebarProvider>
       </body>
     </html>
   )
 }
 
-export default LocaleLayout
