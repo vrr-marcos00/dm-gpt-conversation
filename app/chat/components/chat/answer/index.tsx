@@ -111,31 +111,6 @@ const Answer: FC<IAnswerProps> = ({
     )
   }
 
-  /**
-   * Different scenarios have different operation items.
-   * @returns comp
-   */
-  const renderItemOperation = () => {
-    const userOperation = () => {
-      return feedback?.rating
-        ? null
-        : <div className='flex gap-1'>
-          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.like') as string}>
-            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={true} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'like' }) })}
-          </Tooltip>
-          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.dislike') as string}>
-            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={false} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'dislike' }) })}
-          </Tooltip>
-        </div>
-    }
-
-    return (
-      <div className={`${s.itemOperation} flex gap-2`}>
-        {userOperation()}
-      </div>
-    )
-  }
-
   const getImgs = (list?: VisionFile[]) => {
     if (!list)
       return []
@@ -170,16 +145,9 @@ const Answer: FC<IAnswerProps> = ({
   return (
     <div key={id}>
       <div className='flex items-start'>
-        <div className={`${s.answerIcon} w-10 h-10 shrink-0`}>
-          {isResponding
-            && <div className={s.typeingIcon}>
-              <LoadingAnim type='avatar' />
-            </div>
-          }
-        </div>
         <div className={`${s.answerWrap}`}>
           <div className={`${s.answer} relative text-sm text-gray-900`}>
-            <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
+            <div className={`py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl mb-[20px] ${workflowProcess && 'min-w-[480px]'}`} style={{ backgroundImage: "linear-gradient(31deg, #F6BE00 50%, #FFDE6F 100%)" }}>
               {workflowProcess && (
                 <WorkflowProcess data={workflowProcess} hideInfo />
               )}
@@ -196,9 +164,6 @@ const Answer: FC<IAnswerProps> = ({
                   ))}
             </div>
             <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
-              {!feedbackDisabled && !item.feedbackDisabled && renderItemOperation()}
-              {/* User feedback must be displayed */}
-              {!feedbackDisabled && renderFeedbackRating(feedback?.rating)}
             </div>
           </div>
         </div>

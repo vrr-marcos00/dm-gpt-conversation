@@ -18,6 +18,8 @@ import ChatImageUploader from '../base/image-uploader/chat-image-uploader'
 import ImageList from '../base/image-uploader/image-list'
 import { useImageFiles } from '../base/image-uploader/hooks'
 
+import { SendHorizonal } from "lucide-react"
+
 export type IChatProps = {
   chatList: ChatItem[]
   /**
@@ -120,9 +122,9 @@ const Chat: FC<IChatProps> = ({
   }
 
   return (
-    <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
+    <div className="h-full">
       {/* Chat List */}
-      <div className="h-full space-y-[30px]">
+      <div className="h-full]">
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
@@ -147,8 +149,8 @@ const Chat: FC<IChatProps> = ({
       </div>
       {
         !isHideSendInput && (
-          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
+          <div className={cn(!feedbackDisabled && 'absolute z-10 bottom-0 left-0 right-0')} style={{ border: '2px solid #000', borderRadius: '15px' }}>
+            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] rounded-xl overflow-y-auto'>
               {
                 visionConfig?.enabled && (
                   <>
@@ -189,12 +191,13 @@ const Chat: FC<IChatProps> = ({
                   selector='send-tip'
                   htmlContent={
                     <div>
-                      <div>{t('common.operation.send')} Enter</div>
-                      <div>{t('common.operation.lineBreak')} Shift Enter</div>
+                      <div>Clique para enviar ou aperte a tecla ENTER do seu teclado</div>
                     </div>
                   }
                 >
-                  <div className={`${s.sendBtn} w-8 h-8 cursor-pointer rounded-md`} onClick={handleSend}></div>
+                  <div className={`${s.sendBtn} w-8 h-8 cursor-pointer rounded-md flex items-center`} onClick={handleSend}>
+                    <SendHorizonal />
+                  </div>
                 </Tooltip>
               </div>
             </div>

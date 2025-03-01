@@ -9,6 +9,8 @@ type ConversationInfoType = Omit<ConversationItem, 'inputs' | 'id'>
 function useConversation() {
   const [conversationList, setConversationList] = useState<ConversationItem[]>([])
   const [currConversationId, doSetCurrConversationId, getCurrConversationId] = useGetState<string>('-1')
+  const [conversationIdChangeBecauseOfNew, setConversationIdChangeBecauseOfNew, getConversationIdChangeBecauseOfNew] = useGetState(false)
+
 
   // when set conversation id, we do not have set appId
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
@@ -66,6 +68,9 @@ function useConversation() {
     currConversationInfo,
     setNewConversationInfo,
     setExistConversationInfo,
+    conversationIdChangeBecauseOfNew,
+    setConversationIdChangeBecauseOfNew,
+    getConversationIdChangeBecauseOfNew
   }
 }
 

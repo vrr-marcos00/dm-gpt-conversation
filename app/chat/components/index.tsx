@@ -7,7 +7,7 @@ import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
 import useConversation from '@/hooks/use-conversation'
 import Toast from './base/toast'
-import Sidebar from './sidebar'
+
 import ConfigSence from './config-scence'
 import { Header } from '../../../components/header'
 import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
@@ -15,13 +15,13 @@ import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from './chat'
 import { setLocaleOnClient } from '@/i18n/client'
-import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import Loading from './base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from './app-unavailable'
-import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
+
+import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 
 export type IMainProps = {
   params: any
@@ -29,8 +29,6 @@ export type IMainProps = {
 
 const Main: FC<IMainProps> = () => {
   const { t } = useTranslation()
-  const media = useBreakpoints()
-  const isMobile = media === MediaType.mobile
   const hasSetAppConfig = APP_ID && API_KEY
 
   /*
@@ -63,8 +61,8 @@ const Main: FC<IMainProps> = () => {
   }, [])
 
   /*
-  * conversation info
-  */
+* conversation info
+*/
   const {
     conversationList,
     setConversationList,
@@ -80,9 +78,11 @@ const Main: FC<IMainProps> = () => {
     setCurrInputs,
     setNewConversationInfo,
     setExistConversationInfo,
+    setConversationIdChangeBecauseOfNew,
+    getConversationIdChangeBecauseOfNew,
+    conversationIdChangeBecauseOfNew
   } = useConversation()
 
-  const [conversationIdChangeBecauseOfNew, setConversationIdChangeBecauseOfNew, getConversationIdChangeBecauseOfNew] = useGetState(false)
   const [isChatStarted, { setTrue: setChatStarted, setFalse: setChatNotStarted }] = useBoolean(false)
   const handleStartChat = (inputs: Record<string, any>) => {
     createNewChat()
@@ -99,7 +99,6 @@ const Main: FC<IMainProps> = () => {
     return isChatStarted
   })()
 
-  const conversationName = currConversationInfo?.name || t('app.chat.newChatDefaultName') as string
   const conversationIntroduction = currConversationInfo?.introduction || ''
 
   const handleConversationSwitch = () => {
@@ -599,19 +598,6 @@ const Main: FC<IMainProps> = () => {
     notify({ type: 'success', message: t('common.api.success') })
   }
 
-  const renderSidebar = () => {
-    if (!APP_ID || !APP_INFO || !promptConfig)
-      return null
-    return (
-      <Sidebar
-        list={conversationList}
-        onCurrentIdChange={handleConversationIdChange}
-        currentId={currConversationId}
-        copyRight={APP_INFO.copyright || APP_INFO.title}
-      />
-    )
-  }
-
   if (appUnavailable)
     return <AppUnavailable isUnknownReason={isUnknownReason} errMessage={!hasSetAppConfig ? 'Please set APP_ID and API_KEY in config/index.tsx' : ''} />
 
@@ -619,44 +605,33 @@ const Main: FC<IMainProps> = () => {
     return <Loading type='app' />
 
   return (
-    <div>
-      <Header
-        isMobile={isMobile}
-        // onShowSideBar={showSidebar}
-        onCreateNewChat={() => handleConversationIdChange('-1')}
-      />
+    <div className='flex-grow flex flex-col overflow-y-auto min-h-[calc(100vh_-_128px)] max-h-[calc(100vh_-_128px)] p-[20px]'>
+      <ConfigSence
+        hasSetInputs={hasSetInputs}
+        isPublicVersion={isShowPrompt}
+        siteInfo={APP_INFO}
+        promptConfig={promptConfig}
+        onStartChat={handleStartChat}
+        canEditInputs={canEditInputs}
+        savedInputs={currInputs as Record<string, any>}
+        onInputsChange={setCurrInputs}
+      ></ConfigSence>
 
-      <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
-        {/* {!isMobile && renderSidebar()} */}
-
-        <ConfigSence
-          conversationName={conversationName}
-          hasSetInputs={hasSetInputs}
-          isPublicVersion={isShowPrompt}
-          siteInfo={APP_INFO}
-          promptConfig={promptConfig}
-          onStartChat={handleStartChat}
-          canEditInputs={canEditInputs}
-          savedInputs={currInputs as Record<string, any>}
-          onInputsChange={setCurrInputs}
-        ></ConfigSence>
-
-        {
-          hasSetInputs && (
-            <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
-              <div className='h-full overflow-y-auto' ref={chatListDomRef}>
-                <Chat
-                  chatList={chatList}
-                  onSend={handleSend}
-                  onFeedback={handleFeedback}
-                  isResponding={isResponding}
-                  checkCanSend={checkCanSend}
-                  visionConfig={visionConfig}
-                />
-              </div>
-            </div>)
-        }
-      </div>
+      {
+        hasSetInputs && (
+          <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
+            <div className='h-full overflow-y-auto pt-[20px] pl-[20px] pr-[20px] rounded-[30px]' style={{ backgroundImage: 'linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(29,29,29,1) 58%, rgba(17,17,17,0.88)' }} ref={chatListDomRef}>
+              <Chat
+                chatList={chatList}
+                onSend={handleSend}
+                onFeedback={handleFeedback}
+                isResponding={isResponding}
+                checkCanSend={checkCanSend}
+                visionConfig={visionConfig}
+              />
+            </div>
+          </div>)
+      }
     </div>
   )
 }

@@ -16,7 +16,6 @@ import { DEFAULT_VALUE_MAX_LEN } from '@/config'
 const regex = /\{\{([^}]+)\}\}/g
 
 export type IWelcomeProps = {
-  conversationName: string
   hasSetInputs: boolean
   isPublicVersion: boolean
   siteInfo: AppInfo
@@ -28,7 +27,6 @@ export type IWelcomeProps = {
 }
 
 const Welcome: FC<IWelcomeProps> = ({
-  conversationName,
   hasSetInputs,
   isPublicVersion,
   siteInfo,
@@ -80,14 +78,6 @@ const Welcome: FC<IWelcomeProps> = ({
   const { notify } = Toast
   const logError = (message: string) => {
     notify({ type: 'error', message, duration: 3000 })
-  }
-
-  const renderHeader = () => {
-    return (
-      <div className='absolute top-0 left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white'>
-        <div className='text-gray-900'>{conversationName}</div>
-      </div>
-    )
   }
 
   const renderInputs = () => {
@@ -174,6 +164,7 @@ const Welcome: FC<IWelcomeProps> = ({
               </>
             }
           >
+            <h1>'CAIU AQUIII 1'</h1>
             <ChatBtn onClick={handleChat} />
           </TemplateVarPanel>
         </div>
@@ -181,14 +172,16 @@ const Welcome: FC<IWelcomeProps> = ({
     }
     // private version
     return (
-      <TemplateVarPanel
-        isFold={false}
-        header={
-          <AppInfoComp siteInfo={siteInfo} />
-        }
-      >
-        <ChatBtn onClick={handleChat} />
-      </TemplateVarPanel>
+      // <TemplateVarPanel
+      //   isFold={false}
+      //   header={
+      //     <AppInfoComp siteInfo={siteInfo} />
+      //   }
+      // >
+      //   <h1>'CAIU AQUIII 2'</h1>
+
+      // </TemplateVarPanel>
+      <ChatBtn onClick={handleChat} />
     )
   }
 
@@ -201,6 +194,7 @@ const Welcome: FC<IWelcomeProps> = ({
         }
       >
         {renderInputs()}
+        <h1>'CAIU AQUIII 3'</h1>
         <ChatBtn
           className='mt-3 mobile:ml-0 tablet:ml-[128px]'
           onClick={handleChat}
@@ -307,50 +301,67 @@ const Welcome: FC<IWelcomeProps> = ({
   }
 
   return (
-    <div className='relative mobile:min-h-[48px] tablet:min-h-[64px]'>
-      {hasSetInputs && renderHeader()}
-      <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'>
-        {/*  Has't set inputs  */}
-        {
-          !hasSetInputs && (
-            <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
-              {hasVar
-                ? (
-                  renderVarPanel()
-                )
-                : (
-                  renderNoVarPanel()
-                )}
-            </div>
-          )
-        }
-
-        {/* Has set inputs */}
-        {hasSetInputs && renderHasSetInputs()}
-
-        {/* foot */}
-        {!hasSetInputs && (
-          <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>
-
-            {siteInfo.privacy_policy
-              ? <div>{t('app.chat.privacyPolicyLeft')}
-                <a
-                  className='text-gray-500'
-                  href={siteInfo.privacy_policy}
-                  target='_blank'>{t('app.chat.privacyPolicyMiddle')}</a>
-                {t('app.chat.privacyPolicyRight')}
-              </div>
-              : <div>
-              </div>}
-            <a className='flex items-center pr-3 space-x-3' href="https://dify.ai/" target="_blank">
-              <span className='uppercase'>{t('app.chat.powerBy')}</span>
-              <FootLogo />
-            </a>
+    <>
+      {
+        !hasSetInputs && (
+          <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
+            {hasVar
+              ? (
+                renderVarPanel()
+              )
+              : (
+                renderNoVarPanel()
+              )}
           </div>
-        )}
-      </div>
-    </div >
+        )
+      }
+    </>
   )
+
+  // return (
+  // <>
+  //   {/* <div className='relative mobile:min-h-[48px] tablet:min-h-[64px]'> */}
+  //   {/* <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'> */}
+  //   {/* {
+  //     !hasSetInputs && (
+  //       <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
+  //         {hasVar
+  //           ? (
+  //             renderVarPanel()
+  //           )
+  //           : (
+  //             renderNoVarPanel()
+  //           )}
+  //       </div>
+  //     )
+  //   } */}
+
+  //   {/* Has set inputs */}
+  //   {/* {hasSetInputs && renderHasSetInputs()} */}
+
+  //   {/* {!hasSetInputs && (
+  //       <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>
+
+  //         {siteInfo.privacy_policy
+  //           ? <div>{t('app.chat.privacyPolicyLeft')}
+  //             <a
+  //               className='text-gray-500'
+  //               href={siteInfo.privacy_policy}
+  //               target='_blank'>{t('app.chat.privacyPolicyMiddle')}</a>
+  //             {t('app.chat.privacyPolicyRight')}
+  //           </div>
+  //           : <div>
+  //           </div>}
+  //         <a className='flex items-center pr-3 space-x-3' href="https://dify.ai/" target="_blank">
+  //           <span className='uppercase'>{t('app.chat.powerBy')}</span>
+  //           <FootLogo />
+  //         </a>
+  //       </div>
+  //     )} */}
+  //   {/* </div> */}
+  //   {/* </div > */}
+  // </>
+  // )
 }
 
 export default React.memo(Welcome)
