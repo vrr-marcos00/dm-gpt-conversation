@@ -11,6 +11,8 @@ export async function POST(request: NextRequest) {
     response_mode: responseMode,
   } = body
   const { user } = getInfo(request)
-  const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
+  const appKey = request.nextUrl.searchParams.get('app-key') as string
+
+  const res = await client(appKey).createChatMessage(inputs, query, user, responseMode, conversationId, files)
   return new Response(res.data as any)
 }

@@ -11,6 +11,7 @@ import Toast from '../../base/toast'
 type UploaderProps = {
   children: (hovering: boolean) => JSX.Element
   onUpload: (imageFile: ImageFile) => void
+  appKey: string
   limit?: number
   disabled?: boolean
 }
@@ -20,6 +21,7 @@ const Uploader: FC<UploaderProps> = ({
   onUpload,
   limit,
   disabled,
+  appKey
 }) => {
   const [hovering, setHovering] = useState(false)
   const { notify } = Toast
@@ -52,6 +54,7 @@ const Uploader: FC<UploaderProps> = ({
         onUpload(imageFile)
         imageUpload({
           file: imageFile.file,
+          appKey,
           onProgressCallback: (progress) => {
             onUpload({ ...imageFile, progress })
           },

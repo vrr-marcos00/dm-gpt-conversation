@@ -13,18 +13,18 @@ function useConversation() {
 
 
   // when set conversation id, we do not have set appId
-  const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
+  const setCurrConversationId = (id: string, appId: string, chatType: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
     if (isSetToLocalStroge && id !== '-1') {
       // conversationIdInfo: {[appId1]: conversationId1, [appId2]: conversationId2}
-      const conversationIdInfo = globalThis.localStorage?.getItem(storageConversationIdKey) ? JSON.parse(globalThis.localStorage?.getItem(storageConversationIdKey) || '') : {}
+      const conversationIdInfo = globalThis.localStorage?.getItem(`${storageConversationIdKey}-${chatType}`) ? JSON.parse(globalThis.localStorage?.getItem(`${storageConversationIdKey}-${chatType}`) || '') : {}
       conversationIdInfo[appId] = id
-      globalThis.localStorage?.setItem(storageConversationIdKey, JSON.stringify(conversationIdInfo))
+      globalThis.localStorage?.setItem(`${storageConversationIdKey}-${chatType}`, JSON.stringify(conversationIdInfo))
     }
   }
 
-  const getConversationIdFromStorage = (appId: string) => {
-    const conversationIdInfo = globalThis.localStorage?.getItem(storageConversationIdKey) ? JSON.parse(globalThis.localStorage?.getItem(storageConversationIdKey) || '') : {}
+  const getConversationIdFromStorage = (appId: string, chatType: string) => {
+    const conversationIdInfo = globalThis.localStorage?.getItem(`${storageConversationIdKey}-${chatType}`) ? JSON.parse(globalThis.localStorage?.getItem(`${storageConversationIdKey}-${chatType}`) || '') : {}
     const id = conversationIdInfo[appId]
     return id
   }

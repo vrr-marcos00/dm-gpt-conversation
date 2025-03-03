@@ -21,6 +21,7 @@ import { useImageFiles } from '../base/image-uploader/hooks'
 import { SendHorizonal } from "lucide-react"
 
 export type IChatProps = {
+  appKey: string
   chatList: ChatItem[]
   /**
    * Whether to display the editing area and rating status
@@ -40,6 +41,7 @@ export type IChatProps = {
 }
 
 const Chat: FC<IChatProps> = ({
+  appKey,
   chatList,
   feedbackDisabled = false,
   isHideSendInput = false,
@@ -85,7 +87,7 @@ const Chat: FC<IChatProps> = ({
     onImageLinkLoadError,
     onImageLinkLoadSuccess,
     onClear,
-  } = useImageFiles()
+  } = useImageFiles(appKey)
 
   const handleSend = () => {
     if (!valid() || (checkCanSend && !checkCanSend()))
@@ -156,6 +158,7 @@ const Chat: FC<IChatProps> = ({
                   <>
                     <div className='absolute bottom-2 left-2 flex items-center'>
                       <ChatImageUploader
+                        appKey={appKey}
                         settings={visionConfig}
                         onUpload={onUpload}
                         disabled={files.length >= visionConfig.number_limits}

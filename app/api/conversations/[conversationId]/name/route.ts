@@ -12,8 +12,9 @@ export async function POST(request: NextRequest, { params }: {
   } = body
   const { conversationId } = params
   const { user } = getInfo(request)
+  const appKey = request.nextUrl.searchParams.get('app-key') as string
 
   // auto generate name
-  const { data } = await client.renameConversation(conversationId, name, user, auto_generate)
+  const { data } = await client(appKey).renameConversation(conversationId, name, user, auto_generate)
   return NextResponse.json(data)
 }

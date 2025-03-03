@@ -6,7 +6,7 @@ export enum LOC {
 
 export enum AuthType {
   none = 'none',
-  apiKey = 'api_key',
+  appKey = 'api_key',
 }
 
 export type Credential = {

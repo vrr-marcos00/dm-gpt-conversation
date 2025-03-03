@@ -164,7 +164,6 @@ const Welcome: FC<IWelcomeProps> = ({
               </>
             }
           >
-            <h1>'CAIU AQUIII 1'</h1>
             <ChatBtn onClick={handleChat} />
           </TemplateVarPanel>
         </div>
@@ -172,16 +171,20 @@ const Welcome: FC<IWelcomeProps> = ({
     }
     // private version
     return (
-      // <TemplateVarPanel
-      //   isFold={false}
-      //   header={
-      //     <AppInfoComp siteInfo={siteInfo} />
-      //   }
-      // >
-      //   <h1>'CAIU AQUIII 2'</h1>
+      <div className="w-[75%] flex flex-col justify-center items-center ">
+        <div className="mb-[20px]">
+          <span className='text-2xl font-bold'>Bem-vindo ao Jordan – Seu assistente de contorno de objeções!</span>
+        </div>
 
-      // </TemplateVarPanel>
-      <ChatBtn onClick={handleChat} />
+        <div className="mb-[40px]">
+          <p>
+            Sabemos que lidar com objeções pode ser um desafio, mas o Jordan está aqui para ajudá-lo a responder seus clientes com confiança e estratégia.
+            Desenvolvido pela <strong>Destruindo Metas</strong>, ele foi criado para oferecer suporte inteligente e eficaz para que você nunca perca uma venda por falta da resposta certa.
+          </p>
+        </div>
+
+        <ChatBtn onClick={handleChat} />
+      </div>
     )
   }
 
@@ -304,7 +307,7 @@ const Welcome: FC<IWelcomeProps> = ({
     <>
       {
         !hasSetInputs && (
-          <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
+          <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px] flex align-center justify-center'>
             {hasVar
               ? (
                 renderVarPanel()

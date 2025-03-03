@@ -2,34 +2,47 @@
 'use client'
 import type { FC } from 'react'
 import React, { useEffect, useRef, useState } from 'react'
+
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
 import useConversation from '@/hooks/use-conversation'
-import Toast from './base/toast'
+
 
 import ConfigSence from './config-scence'
-import { Header } from '../../../components/header'
 import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
 import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
-import Chat from './chat'
 import { setLocaleOnClient } from '@/i18n/client'
-import Loading from './base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
-import AppUnavailable from './app-unavailable'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
 
-import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
+import { useSearchParams } from 'next/navigation'
+import { APP_KEY_JORDAN, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
+
+import { Loading } from '@/components/loading'
+import Toast from './base/toast'
+import AppUnavailable from './app-unavailable'
+import Chat from './chat'
 
 export type IMainProps = {
   params: any
 }
 
+const APPS_KEYS = {
+  'CHAT_JORDAN': APP_KEY_JORDAN
+}
+
 const Main: FC<IMainProps> = () => {
+  const params = useSearchParams();
   const { t } = useTranslation()
-  const hasSetAppConfig = APP_ID && API_KEY
+
+  // @ts-ignore
+  const CHAT_TYPE = params.get('type') as string
+  // @ts-ignore
+  const APP_KEY = APPS_KEYS[CHAT_TYPE]
+  const hasSetAppConfig = APP_ID && APP_KEY
 
   /*
   * app info
@@ -125,7 +138,7 @@ const Main: FC<IMainProps> = () => {
 
     // update chat list of current conversation
     if (!isNewConversation && !conversationIdChangeBecauseOfNew && !isResponding) {
-      fetchChatList(currConversationId).then((res: any) => {
+      fetchChatList(currConversationId, APP_KEY).then((res: any) => {
         const { data } = res
         const newChatList: ChatItem[] = generateNewChatListWithOpenStatement(notSyncToStateIntroduction, notSyncToStateInputs)
 
@@ -164,7 +177,7 @@ const Main: FC<IMainProps> = () => {
       setConversationIdChangeBecauseOfNew(false)
     }
     // trigger handleConversationSwitch
-    setCurrConversationId(id, APP_ID)
+    setCurrConversationId(id, APP_ID, CHAT_TYPE)
     hideSidebar()
   }
 
@@ -223,7 +236,7 @@ const Main: FC<IMainProps> = () => {
     }
     (async () => {
       try {
-        const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
+        const [conversationData, appParams] = await Promise.all([fetchConversations(APP_KEY), fetchAppParams(APP_KEY)])
 
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
@@ -232,7 +245,7 @@ const Main: FC<IMainProps> = () => {
           throw new Error(error)
           return
         }
-        const _conversationId = getConversationIdFromStorage(APP_ID)
+        const _conversationId = getConversationIdFromStorage(APP_ID, CHAT_TYPE)
         const isNotNewConversation = conversations.some(item => item.id === _conversationId)
 
         // fetch new conversation info
@@ -254,7 +267,7 @@ const Main: FC<IMainProps> = () => {
         setConversationList(conversations as ConversationItem[])
 
         if (isNotNewConversation)
-          setCurrConversationId(_conversationId, APP_ID, false)
+          setCurrConversationId(_conversationId, APP_ID, CHAT_TYPE, false)
 
         setInited(true)
       }
@@ -383,7 +396,7 @@ const Main: FC<IMainProps> = () => {
     let tempNewConversationId = ''
 
     setRespondingTrue()
-    sendChatMessage(data, {
+    sendChatMessage(APP_KEY, data, {
       getAbortController: (abortController) => {
         setAbortController(abortController)
       },
@@ -422,8 +435,8 @@ const Main: FC<IMainProps> = () => {
           return
 
         if (getConversationIdChangeBecauseOfNew()) {
-          const { data: allConversations }: any = await fetchConversations()
-          const newItem: any = await generationConversationName(allConversations[0].id)
+          const { data: allConversations }: any = await fetchConversations(APP_KEY)
+          const newItem: any = await generationConversationName(allConversations[0].id, APP_KEY)
 
           const newAllConversations = produce(allConversations, (draft: any) => {
             draft[0].name = newItem.name
@@ -433,7 +446,7 @@ const Main: FC<IMainProps> = () => {
         setConversationIdChangeBecauseOfNew(false)
         resetNewConversationInputs()
         setChatNotStarted()
-        setCurrConversationId(tempNewConversationId, APP_ID, true)
+        setCurrConversationId(tempNewConversationId, APP_ID, CHAT_TYPE, true)
         setRespondingFalse()
       },
       onFile(file) {
@@ -602,7 +615,7 @@ const Main: FC<IMainProps> = () => {
     return <AppUnavailable isUnknownReason={isUnknownReason} errMessage={!hasSetAppConfig ? 'Please set APP_ID and API_KEY in config/index.tsx' : ''} />
 
   if (!APP_ID || !APP_INFO || !promptConfig)
-    return <Loading type='app' />
+    return <Loading />
 
   return (
     <div className='flex-grow flex flex-col overflow-y-auto min-h-[calc(100vh_-_128px)] max-h-[calc(100vh_-_128px)] p-[20px]'>
@@ -622,6 +635,7 @@ const Main: FC<IMainProps> = () => {
           <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
             <div className='h-full overflow-y-auto pt-[20px] pl-[20px] pr-[20px] rounded-[30px]' style={{ backgroundImage: 'linear-gradient(270deg, rgba(0,0,0,1) 0%, rgba(29,29,29,1) 58%, rgba(17,17,17,0.88)' }} ref={chatListDomRef}>
               <Chat
+                appKey={APP_KEY}
                 chatList={chatList}
                 onSend={handleSend}
                 onFeedback={handleFeedback}

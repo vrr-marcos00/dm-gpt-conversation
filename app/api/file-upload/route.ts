@@ -6,7 +6,9 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const { user } = getInfo(request)
     formData.append('user', user)
-    const res = await client.fileUpload(formData)
+    const appKey = request.nextUrl.searchParams.get('app-key') as string
+
+    const res = await client(appKey).fileUpload(formData)
     return new Response(res.data.id as any)
   }
   catch (e: any) {

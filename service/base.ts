@@ -329,9 +329,9 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
   ])
 }
 
-export const upload = (fetchOptions: any): Promise<any> => {
+export const upload = (fetchOptions: any, appKey: string): Promise<any> => {
   const urlPrefix = API_PREFIX
-  const urlWithPrefix = `${urlPrefix}/file-upload`
+  const urlWithPrefix = `${urlPrefix}/file-upload?appKey=${appKey}`
   const defaultOptions = {
     method: 'POST',
     url: `${urlWithPrefix}`,

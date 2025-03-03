@@ -2,12 +2,11 @@
 
 import * as React from "react"
 import {
-  BookOpen,
   Bot,
-  Frame,
-  Map,
-  PieChart,
-  Settings2,
+  Instagram,
+  Youtube,
+  Linkedin,
+  TvMinimal
 } from "lucide-react"
 
 import { NavMain } from "./components/nav-main"
@@ -37,7 +36,7 @@ const data = {
       items: [
         {
           title: "Contorno de objeções",
-          url: "#",
+          url: "/chat?type=CHAT_JORDAN",
         },
         {
           title: "Chatbot 2",
@@ -49,60 +48,27 @@ const data = {
         },
       ],
     },
-    {
-      title: "Documentos",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Documentos 1",
-          url: "#",
-        },
-        {
-          title: "Documentos 2",
-          url: "#",
-        },
-        {
-          title: "Documento 3",
-          url: "#",
-        },
-        {
-          title: "Documento 4",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Ajuda",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Falar com suporte",
-          url: "#",
-        },
-        {
-          title: "Enviar reclação",
-          url: "#",
-        },
-      ],
-    },
   ],
-  projects: [
+  socialMedia: [
     {
-      name: "High Club 1",
-      url: "#",
-      icon: Frame,
+      name: "Instagram",
+      url: "https://www.instagram.com/destruindometas.br",
+      icon: Instagram,
     },
     {
-      name: "High Club 2",
-      url: "#",
-      icon: PieChart,
+      name: "Youtube",
+      url: "https://www.youtube.com/c/GiovanneSaraiva",
+      icon: Youtube,
     },
     {
-      name: "High Club 3",
-      url: "tese",
-      icon: Map,
+      name: "LinkedIn",
+      url: "https://www.linkedin.com/company/destruindo-metas/?originalSubdomain=br",
+      icon: Linkedin,
+    },
+    {
+      name: "Site - Destruindo Metas",
+      url: "https://destruindometas.com.br",
+      icon: TvMinimal,
     },
   ],
 }
@@ -110,9 +76,9 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" variant="floating" {...props}>
-      <SidebarContent>
+      <SidebarContent >
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={data.socialMedia} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

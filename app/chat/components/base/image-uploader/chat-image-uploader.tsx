@@ -17,14 +17,16 @@ type UploadOnlyFromLocalProps = {
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
   limit?: number
+  appKey: string
 }
 const UploadOnlyFromLocal: FC<UploadOnlyFromLocalProps> = ({
   onUpload,
   disabled,
   limit,
+  appKey,
 }) => {
   return (
-    <Uploader onUpload={onUpload} disabled={disabled} limit={limit}>
+    <Uploader appKey={appKey} onUpload={onUpload} disabled={disabled} limit={limit}>
       {
         hovering => (
           <div className={`
@@ -42,6 +44,7 @@ const UploadOnlyFromLocal: FC<UploadOnlyFromLocalProps> = ({
 type UploaderButtonProps = {
   methods: VisionSettings['transfer_methods']
   onUpload: (imageFile: ImageFile) => void
+  appKey: string
   disabled?: boolean
   limit?: number
 }
@@ -50,6 +53,7 @@ const UploaderButton: FC<UploaderButtonProps> = ({
   onUpload,
   disabled,
   limit,
+  appKey,
 }) => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -93,7 +97,7 @@ const UploaderButton: FC<UploaderButtonProps> = ({
                   OR
                   <div className='ml-3 w-[93px] h-[1px] bg-gradient-to-r from-[#F3F4F6]' />
                 </div>
-                <Uploader onUpload={handleUpload} limit={limit}>
+                <Uploader appKey={appKey} onUpload={handleUpload} limit={limit}>
                   {
                     hovering => (
                       <div className={`
@@ -119,17 +123,20 @@ type ChatImageUploaderProps = {
   settings: VisionSettings
   onUpload: (imageFile: ImageFile) => void
   disabled?: boolean
+  appKey: string
 }
 const ChatImageUploader: FC<ChatImageUploaderProps> = ({
   settings,
   onUpload,
   disabled,
+  appKey,
 }) => {
   const onlyUploadLocal = settings.transfer_methods.length === 1 && settings.transfer_methods[0] === TransferMethod.local_file
 
   if (onlyUploadLocal) {
     return (
       <UploadOnlyFromLocal
+        appKey={appKey}
         onUpload={onUpload}
         disabled={disabled}
         limit={+settings.image_file_size_limit!}
@@ -139,6 +146,7 @@ const ChatImageUploader: FC<ChatImageUploaderProps> = ({
 
   return (
     <UploaderButton
+      appKey={appKey}
       methods={settings.transfer_methods}
       onUpload={onUpload}
       disabled={disabled}
