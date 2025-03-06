@@ -6,11 +6,12 @@ import {
   Instagram,
   Youtube,
   Linkedin,
-  TvMinimal
+  TvMinimal,
+  MessagesSquare
 } from "lucide-react"
 
 import { NavMain } from "./components/nav-main"
-import { NavProjects } from "./components/nav-projects"
+import { NavSocialMedia } from "./components/nav-social-media"
 import { NavUser } from "./components/nav-user"
 
 import {
@@ -51,25 +52,33 @@ const data = {
   ],
   socialMedia: [
     {
-      name: "Instagram",
-      url: "https://www.instagram.com/destruindometas.br",
-      icon: Instagram,
-    },
-    {
-      name: "Youtube",
-      url: "https://www.youtube.com/c/GiovanneSaraiva",
-      icon: Youtube,
-    },
-    {
-      name: "LinkedIn",
-      url: "https://www.linkedin.com/company/destruindo-metas/?originalSubdomain=br",
-      icon: Linkedin,
-    },
-    {
-      name: "Site - Destruindo Metas",
-      url: "https://destruindometas.com.br",
-      icon: TvMinimal,
-    },
+      title: "Redes Sociais",
+      url: "#",
+      icon: MessagesSquare,
+      isActive: true,
+      items: [
+        {
+          title: "Instagram",
+          url: "https://www.instagram.com/destruindometas.br",
+          icon: Instagram,
+        },
+        {
+          title: "Youtube",
+          url: "https://www.youtube.com/c/GiovanneSaraiva",
+          icon: Youtube,
+        },
+        {
+          title: "LinkedIn",
+          url: "https://www.linkedin.com/company/destruindo-metas/?originalSubdomain=br",
+          icon: Linkedin,
+        },
+        {
+          title: "Site - Destruindo Metas",
+          url: "https://destruindometas.com.br",
+          icon: TvMinimal,
+        },
+      ]
+    }
   ],
 }
 
@@ -78,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" variant="floating" {...props}>
       <SidebarContent >
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.socialMedia} />
+        <NavSocialMedia items={data.socialMedia} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -24,6 +24,7 @@ export type IWelcomeProps = {
   canEditInputs: boolean
   savedInputs: Record<string, any>
   onInputsChange: (inputs: Record<string, any>) => void
+  chatType: string
 }
 
 const Welcome: FC<IWelcomeProps> = ({
@@ -35,6 +36,7 @@ const Welcome: FC<IWelcomeProps> = ({
   canEditInputs,
   savedInputs,
   onInputsChange,
+  chatType
 }) => {
   const { t } = useTranslation()
   const hasVar = promptConfig.prompt_variables.length > 0
@@ -51,6 +53,20 @@ const Welcome: FC<IWelcomeProps> = ({
     }
     return res
   })())
+
+  const PANEL_LABELS = {
+    'CHAT_JORDAN': {
+      title: <span className='text-2xl font-bold'>Bem-vindo ao Jordan – Seu assistente de contorno de objeções!</span>,
+      subtitle: (
+        <p>
+          Sabemos que lidar com objeções pode ser um desafio, mas o Jordan está aqui para ajudá-lo a responder seus clientes com confiança e estratégia.
+          Desenvolvido pela <strong>Destruindo Metas</strong>, ele foi criado para oferecer suporte inteligente e eficaz para que você nunca perca uma venda por falta da resposta certa.
+        </p>
+      )
+    },
+  }
+
+
   useEffect(() => {
     if (!savedInputs) {
       const res: Record<string, any> = {}
@@ -173,14 +189,17 @@ const Welcome: FC<IWelcomeProps> = ({
     return (
       <div className="w-[75%] flex flex-col justify-center items-center ">
         <div className="mb-[20px]">
-          <span className='text-2xl font-bold'>Bem-vindo ao Jordan – Seu assistente de contorno de objeções!</span>
+          {
+            // @ts-ignore
+            PANEL_LABELS[chatType]?.title
+          }
         </div>
 
         <div className="mb-[40px]">
-          <p>
-            Sabemos que lidar com objeções pode ser um desafio, mas o Jordan está aqui para ajudá-lo a responder seus clientes com confiança e estratégia.
-            Desenvolvido pela <strong>Destruindo Metas</strong>, ele foi criado para oferecer suporte inteligente e eficaz para que você nunca perca uma venda por falta da resposta certa.
-          </p>
+          {
+            // @ts-ignore
+            PANEL_LABELS[chatType]?.subtitle
+          }
         </div>
 
         <ChatBtn onClick={handleChat} />
@@ -320,51 +339,6 @@ const Welcome: FC<IWelcomeProps> = ({
       }
     </>
   )
-
-  // return (
-  // <>
-  //   {/* <div className='relative mobile:min-h-[48px] tablet:min-h-[64px]'> */}
-  //   {/* <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'> */}
-  //   {/* {
-  //     !hasSetInputs && (
-  //       <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
-  //         {hasVar
-  //           ? (
-  //             renderVarPanel()
-  //           )
-  //           : (
-  //             renderNoVarPanel()
-  //           )}
-  //       </div>
-  //     )
-  //   } */}
-
-  //   {/* Has set inputs */}
-  //   {/* {hasSetInputs && renderHasSetInputs()} */}
-
-  //   {/* {!hasSetInputs && (
-  //       <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>
-
-  //         {siteInfo.privacy_policy
-  //           ? <div>{t('app.chat.privacyPolicyLeft')}
-  //             <a
-  //               className='text-gray-500'
-  //               href={siteInfo.privacy_policy}
-  //               target='_blank'>{t('app.chat.privacyPolicyMiddle')}</a>
-  //             {t('app.chat.privacyPolicyRight')}
-  //           </div>
-  //           : <div>
-  //           </div>}
-  //         <a className='flex items-center pr-3 space-x-3' href="https://dify.ai/" target="_blank">
-  //           <span className='uppercase'>{t('app.chat.powerBy')}</span>
-  //           <FootLogo />
-  //         </a>
-  //       </div>
-  //     )} */}
-  //   {/* </div> */}
-  //   {/* </div > */}
-  // </>
-  // )
 }
 
 export default React.memo(Welcome)

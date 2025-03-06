@@ -19,7 +19,13 @@ import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
 
 import { useSearchParams } from 'next/navigation'
-import { APP_KEY_JORDAN, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
+import {
+  APP_KEY_JORDAN,
+  APP_ID,
+  APP_INFO,
+  isShowPrompt,
+  promptTemplate
+} from '@/config'
 
 import { Loading } from '@/components/loading'
 import Toast from './base/toast'
@@ -236,7 +242,7 @@ const Main: FC<IMainProps> = () => {
     }
     (async () => {
       try {
-        const [conversationData, appParams] = await Promise.all([fetchConversations(APP_KEY), fetchAppParams(APP_KEY)])
+        const [conversationData, appParams] = await Promise.all([fetchConversations(APP_KEY), fetchAppParams(APP_KEY)]);
 
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
@@ -628,6 +634,7 @@ const Main: FC<IMainProps> = () => {
         canEditInputs={canEditInputs}
         savedInputs={currInputs as Record<string, any>}
         onInputsChange={setCurrInputs}
+        chatType={CHAT_TYPE}
       ></ConfigSence>
 
       {
